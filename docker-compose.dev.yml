@@ -10,12 +10,13 @@ services:
       - ./students-city-api/.env
       - ./students-city-api/.env.local
     volumes:
-      - ./students-city-api:/app:delegated
+      - ./students-city-api:/app
       - ./students-city-api/config/jwt:/app/config/jwt:ro
     networks:
       - plane-net
       - db-net
       - studentscity-net
+    command: php -S 0.0.0.0:8000 -t public
     labels:
       - "traefik.enable=true"
       - "traefik.docker.network=plane-app_default"
