@@ -6,6 +6,8 @@ services:
     container_name: studentscity-backend_dev
     ports:
       - "8000:8000"
+    volumes:
+      - ./students-city-api:/app:delegated
     env_file:
       - ./students-city-api/.env
       - ./students-city-api/.env.local
