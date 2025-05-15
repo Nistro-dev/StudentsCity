@@ -9,9 +9,6 @@ services:
     env_file:
       - ./students-city-api/.env
       - ./students-city-api/.env.local
-    volumes:
-      - ./students-city-api:/app
-      - ./students-city-api/config/jwt:/app/config/jwt:ro
     networks:
       - plane-net
       - db-net
