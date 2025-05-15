@@ -1,0 +1,37 @@
+services:
+  backend-dev:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: studentscity-backend_dev
+    ports:
+      - "8000:8000"
+    env_file:
+      - ./backend/.env
+      - ./backend/.env.local
+    volumes:
+      - ./backend:/app:delegated
+      - ./backend/config/jwt:/app/config/jwt:ro
+    depends_on:
+      - mysql-db
+    networks:
+      - plane-net
+      - db-net
+      - studentscity-net
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=plane-app_default"
+      - "traefik.http.routers.studentscity-api.rule=Host(`studentscity.dev.cloudforgestudio.fr`)"
+      - "traefik.http.routers.studentscity-api.entrypoints=websecure"
+      - "traefik.http.routers.studentscity-api.tls.certresolver=letsencrypt"
+      - "traefik.http.services.studentscity-api.loadbalancer.server.port=8000"
+
+networks:
+  db-net:
+    external: true
+    name: infra-databases_db-net
+  plane-net:
+    external: true
+    name: plane-app_default
+  studentscity-net:
+    driver: bridge
