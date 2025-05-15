@@ -17,7 +17,12 @@ RUN apk add --no-cache libzip bash
 
 WORKDIR /app
 COPY . .
-RUN composer install --no-dev --optimize-autoloader --no-interaction --no-scripts
+
+RUN composer install \
+    --no-dev \
+    --optimize-autoloader \
+    --no-interaction \
+    --no-scripts
 
 EXPOSE 8000
 
