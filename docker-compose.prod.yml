@@ -1,0 +1,53 @@
+services:
+  backend-prod:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: enaturium-backend_prod
+    ports:
+      - "3000:3000"
+    environment:
+      MYSQL_HOST:   mysql-db
+      MYSQL_PORT:   "3306"
+      MYSQL_DATABASE: enaturium_db:prod
+      MYSQL_USER:     enaturium_user:prod
+      MYSQL_PASSWORD: "${DB_PASSWORD}"
+      PORT:           "3000"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+    networks:
+      - plane-net
+      - db-net
+      - enaturium-net
+
+  frontend-prod:
+    depends_on:
+      backend-prod:
+        condition: service_healthy
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.prod
+    container_name: enaturium-frontend_prod
+    networks:
+      - plane-net
+      - enaturium-net
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=plane-app_default"
+      - "traefik.http.routers.frontend-prod.rule=Host(`enaturium.cloudforgestudio.fr`)"
+      - "traefik.http.routers.frontend-prod.entrypoints=websecure"
+      - "traefik.http.routers.frontend-prod.tls.certresolver=letsencrypt"
+
+networks:
+  db-net:
+    external: true
+    name: infra-databases_db-net
+  plane-net:
+    external: true
+    name: plane-app_default
+  enaturium-net:
+    driver: bridge
