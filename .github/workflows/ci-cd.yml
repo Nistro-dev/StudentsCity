@@ -36,15 +36,19 @@ jobs:
           extensions: mbstring, pdo_mysql, xml, intl
 
       - name: Install Composer dependencies
+        working-directory: ./students-city-api
         run: composer install --prefer-dist --no-progress --no-interaction
 
       - name: Lint with PHP CS Fixer
+        working-directory: ./students-city-api
         run: vendor/bin/php-cs-fixer fix --dry-run --diff
 
       - name: Static analysis with PHPStan
+        working-directory: ./students-city-api
         run: vendor/bin/phpstan analyse
 
       - name: Run PHPUnit
+        working-directory: ./students-city-api
         env:
           DATABASE_URL: mysql://root:root@127.0.0.1:3306/test
         run: vendor/bin/phpunit --coverage-text
@@ -73,7 +77,7 @@ jobs:
             git checkout dev
             git pull origin dev
 
-            cat > .env.local << 'EOF'
+            cat > students-city-api/.env.local << EOF
             APP_ENV=dev
             APP_SECRET=${{ secrets.APP_SECRET }}
             DATABASE_URL="mysql://students-city_user:dev:${{ secrets.DB_DEV_PASSWORD }}@mysql-db:3306/students_city?serverVersion=8.0&charset=utf8mb4"
