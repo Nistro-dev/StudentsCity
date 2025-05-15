@@ -1,17 +1,17 @@
 services:
   backend-dev:
     build:
-      context: ./backend
+      context: ./students-city-api
       dockerfile: Dockerfile
     container_name: studentscity-backend_dev
     ports:
       - "8000:8000"
     env_file:
-      - ./backend/.env
-      - ./backend/.env.local
+      - ./students-city-api/.env
+      - ./students-city-api/.env.local
     volumes:
-      - ./backend:/app:delegated
-      - ./backend/config/jwt:/app/config/jwt:ro
+      - ./students-city-api:/app:delegated
+      - ./students-city-api/config/jwt:/app/config/jwt:ro
     networks:
       - plane-net
       - db-net
