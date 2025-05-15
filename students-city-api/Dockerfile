@@ -1,5 +1,5 @@
 # Stage 1: base image with PHP and required extensions
-FROM php:8.1-fpm-alpine AS base
+FROM php:8.2-fpm-alpine AS base
 
 # Install system dependencies, build tools and PHP extensions
 RUN apk add --no-cache \
@@ -35,7 +35,7 @@ RUN mkdir -p config/jwt \
     && chmod 644 config/jwt/public.pem
 
 # Stage 2: production image
-FROM php:8.1-fpm-alpine
+FROM php:8.2-fpm-alpine
 
 # Copy PHP extensions and Composer from base
 COPY --from=base /usr/local/etc/php /usr/local/etc/php
