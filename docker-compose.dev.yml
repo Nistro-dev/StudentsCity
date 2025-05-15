@@ -11,6 +11,11 @@ services:
     env_file:
       - ./students-city-api/.env
       - ./students-city-api/.env.local
+    environment:
+      APP_ENV: dev
+      APP_SECRET: "${{ secrets.APP_SECRET }}"
+      DATABASE_URL: "mysql://students-city_user:dev:${{ secrets.DB_DEV_PASSWORD }}@mysql-db:3306/students_city?serverVersion=8.0&charset=utf8mb4"
+      JWT_PASSPHRASE: "${{ secrets.JWT_PASSPHRASE }}"
     networks:
       - plane-net
       - db-net

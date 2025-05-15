@@ -1,14 +1,20 @@
-#!/bin/sh
+#!/usr/bin/env sh
 set -e
 
-# Assurez-vous que .env.local existe
-[ -f /app/.env.local ] || { echo ".env.local manquant" >&2; exit 1; }
+# Génère .env.local depuis les env vars Docker
+cat > /app/.env.local <<EOF
+APP_ENV=${APP_ENV:-prod}
+APP_SECRET=${APP_SECRET}
+DATABASE_URL="${DATABASE_URL}"
+JWT_SECRET_KEY=%kernel.project_dir%/config/jwt/private.pem
+JWT_PUBLIC_KEY=%kernel.project_dir%/config/jwt/public.pem
+JWT_PASSPHRASE=${JWT_PASSPHRASE}
+EOF
 
-# Générer l’autoload optimisé (au cas où nouveaux paquets)
+# Cache & migrations si nécessaire
 composer dump-autoload --optimize
+php bin/console cache:clear --env="${APP_ENV}"
+php bin/console doctrine:migrations:migrate --no-interaction
 
-# Lancer les auto-scripts Symfony (cache, assets…)
-php bin/console cache:clear --env="${APP_ENV:-prod}"
-
-# Enfin démarrer PHP intégré (ou php-fpm)
-exec php -S 0.0.0.0:8000 -t public
+# Démarre PHP-FPM
+exec php-fpm

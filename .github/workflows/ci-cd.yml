@@ -63,15 +63,9 @@ jobs:
             git checkout dev
             git pull origin dev
 
-            cat > students-city-api/.env.local << 'EOF'
-            APP_ENV=dev
-            APP_SECRET=${{ secrets.APP_SECRET }}
-            DATABASE_URL="mysql://students-city_user:dev:${{ secrets.DB_DEV_PASSWORD }}@mysql-db:3306/students_city?serverVersion=8.0&charset=utf8mb4"
-            JWT_SECRET_KEY=%kernel.project_dir%/config/jwt/private.pem
-            JWT_PUBLIC_KEY=%kernel.project_dir%/config/jwt/public.pem
-            JWT_PASSPHRASE=${{ secrets.JWT_PASSPHRASE }}
-            EOF
-
-            docker compose -f docker-compose.dev.yml pull backend-dev
-            docker compose -f docker-compose.dev.yml up -d --build backend-dev
-            docker compose -f docker-compose.dev.yml ps
+            docker build \
+            --build-arg JWT_PASSPHRASE=${{ secrets.JWT_PASSPHRASE }} \
+            -t studentscity-backend:dev \
+            -f students-city-api/Dockerfile \
+            students-city-api
+            docker-compose -f docker-compose.dev.yml up -d --remove-orphans --build
