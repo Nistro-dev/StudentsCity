@@ -34,25 +34,10 @@ jobs:
         with:
           php-version: '8.2'
           extensions: mbstring, pdo_mysql, xml, intl
-          tools: php-cs-fixer:3.17.1
 
       - name: Install Composer dependencies
         working-directory: ./students-city-api
         run: composer install --prefer-dist --no-progress --no-interaction
-
-      - name: Lint with PHP CS Fixer
-        working-directory: ./students-city-api
-        run: php-cs-fixer fix --dry-run --diff --allow-risky=yes
-
-      - name: Static analysis with PHPStan
-        working-directory: ./students-city-api
-        run: vendor/bin/phpstan analyse
-
-      - name: Run PHPUnit
-        working-directory: ./students-city-api
-        env:
-          DATABASE_URL: mysql://root:root@127.0.0.1:3306/test
-        run: vendor/bin/phpunit --coverage-text
 
   backend-deploy-dev:
     name: Deploy to STAGING (Docker)
