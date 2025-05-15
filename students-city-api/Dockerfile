@@ -21,10 +21,11 @@ COPY --from=composer:2.5 /usr/bin/composer /usr/bin/composer
 
 WORKDIR /app
 
-# Copy composer files and install dependencies
-COPY composer.json composer.lock ./
-RUN composer install --no-dev --optimize-autoloader --no-interaction
+# Copy entire application (including bin/console)
+COPY . .
 
+# Then install dependencies (auto-scripts pourront s’appuyer sur bin/console)
+RUN composer install --no-dev --optimize-autoloader --no-interaction --no-scripts
 # Generate JWT keys at build time
 # Pass the JWT_PASSPHRASE as a build argument
 ARG JWT_PASSPHRASE
