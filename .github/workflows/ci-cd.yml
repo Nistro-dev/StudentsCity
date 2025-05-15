@@ -34,6 +34,7 @@ jobs:
         with:
           php-version: '8.2'
           extensions: mbstring, pdo_mysql, xml, intl
+          tools: php-cs-fixer:3.17.1
 
       - name: Install Composer dependencies
         working-directory: ./students-city-api
@@ -41,7 +42,7 @@ jobs:
 
       - name: Lint with PHP CS Fixer
         working-directory: ./students-city-api
-        run: vendor/bin/php-cs-fixer fix --dry-run --diff
+        run: php-cs-fixer fix --dry-run --diff --allow-risky=yes
 
       - name: Static analysis with PHPStan
         working-directory: ./students-city-api
@@ -77,7 +78,7 @@ jobs:
             git checkout dev
             git pull origin dev
 
-            cat > students-city-api/.env.local << EOF
+            cat > students-city-api/.env.local << 'EOF'
             APP_ENV=dev
             APP_SECRET=${{ secrets.APP_SECRET }}
             DATABASE_URL="mysql://students-city_user:dev:${{ secrets.DB_DEV_PASSWORD }}@mysql-db:3306/students_city?serverVersion=8.0&charset=utf8mb4"
