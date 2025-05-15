@@ -16,7 +16,6 @@ services:
       - plane-net
       - db-net
       - studentscity-net
-    command: php -S 0.0.0.0:8000 -t public
     labels:
       - "traefik.enable=true"
       - "traefik.docker.network=plane-app_default"
