@@ -13,7 +13,7 @@ RUN apk add --no-cache \
     && apk del autoconf build-base
 
 # runtime libs
-RUN apk add --no-cache libzip
+RUN apk add --no-cache libzip bash
 
 WORKDIR /app
 COPY . .
