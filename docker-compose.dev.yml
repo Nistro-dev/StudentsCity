@@ -12,8 +12,6 @@ services:
     volumes:
       - ./backend:/app:delegated
       - ./backend/config/jwt:/app/config/jwt:ro
-    depends_on:
-      - mysql-db
     networks:
       - plane-net
       - db-net
